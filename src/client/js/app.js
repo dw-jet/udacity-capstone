@@ -1,3 +1,5 @@
+import { intervalToDuration } from 'date-fns'
+
 // Helper functions
 async function getDataFromAPI(url='') {
     const request = await fetch(url);
@@ -27,9 +29,17 @@ function constructGeonamesURL(rawSearchTerm) {
     return fetchURL;
 }
 
+const getDate = (target) => {
+    const currentDate = new Date();
+    const targetDate = new Date(target);
+    return intervalToDuration({
+        start: currentDate,
+        end: targetDate
+    })
+}
+
 // Individual API calls
-const getGeonamesData = () => {
-    const location = document.getElementById('location').value
+const getGeonamesData = (location) => {
     if (!location) { return; }
     getDataFromAPI(constructGeonamesURL(location))
     .then(function(data){
@@ -37,4 +47,16 @@ const getGeonamesData = () => {
     })
 }
 
-export { getGeonamesData }
+// Main function
+
+function handleSubmit() {
+    const locationInput = document.getElementById('location');
+    const locationText = locationInput.value;
+    const targetDateValue = document.getElementById('targetDate').value;
+    const targetDate = new Date(targetDateValue);
+    const diff = getDate(targetDate).days;
+    locationInput.value = "";
+    console.log(diff);
+    return getGeonamesData(locationText);
+}
+export { handleSubmit }
