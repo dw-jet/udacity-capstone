@@ -1,7 +1,7 @@
 # Weather-Journal App Project
 
 ## Overview
-This project is an asynchronous web app that uses Web API and user data to dynamically update the UI.
+This is my capstone project for the Udacity Front End Nanodegree. Research a travel destination.
 
 ## Installation
 1. Clone the repository
@@ -9,7 +9,10 @@ This project is an asynchronous web app that uses Web API and user data to dynam
 ```bash
 npm Install
 ```
-3. Get an API key from [OpenWeatherAPI](https://openweathermap.org/api) and replace [Enter your openweathermap API key here] in the website/app.js file with your key.
+3. Build the project
+```bash
+npm run build-prod
+```
 4. Start the server
 ```bash
 npm start
