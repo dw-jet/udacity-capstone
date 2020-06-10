@@ -1,0 +1,94 @@
+$text-color: #333;
+$accent-grey: #eee;
+$accent-color: rgb(250, 181, 38);
+
+body {
+    font: 18px "Karla", sans-serif;
+    color: $text-color;
+  }
+  
+  p {
+    font: 18px/1.66em "Karla", sans-serif;
+    margin-bottom: 24px;
+    color: $text-color;
+  }
+  
+  blockquote {
+    border-left: 2px solid $accent-color;
+    margin: 1.5em 10px;
+    padding: 0.5em 10px;
+    quotes: "\201C""\201D""\2018""\2019";
+    p {
+        font-style: italic;
+        display: inline;
+    }
+    &:before {
+        color: #000;
+        content: open-quote;
+        font-size: 4em;
+        line-height: 0.1em;
+        margin-right: .25em;
+        vertical-align: -0.4em;
+    }
+  }
+  
+  h1 {
+    font: bold 34px/1.2em "Karla", san-serif;
+  }
+  
+  h2 {
+    font: bold 26px/1.2em "Karla", san-serif;
+  }
+  
+  h3 {
+    font: bold 22px/1.2em "Karla, san-serif";
+  }
+  
+  ul {
+    list-style: circle outside none;
+  }
+  
+  a {
+    color: $accent-color;
+    text-decoration: none;
+    font-weight: normal;
+  }
+  
+  hr {
+    width: 100%;
+    color: $accent-grey;
+    margin: 0;
+  }
+  
+  figure {
+    margin: 0;
+    padding: 0;
+  }
+  
+  figcaption {
+    font: italic 14px/1em "Karla", san-serif;
+  }
+  
+  .button {
+    background-color: $accent-color;
+    border-radius: 3px;
+    padding: 10px 25px;
+    text-decoration: none;
+    color: white;
+    text-align: center;
+  }
+  
+  .small {
+    font-size: 75%;
+  }
+  
+  .header {
+    height: 60px;
+    border-bottom: 1px solid $accent-grey;
+  }
+  
+  .responsive-pic {
+    width: 100%;
+  }
+
+  
