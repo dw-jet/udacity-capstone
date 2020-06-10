@@ -41,9 +41,13 @@ const getDateDiff = (target) => {
 // Individual API calls
 const getGeonamesData = (location) => {
     if (!location) { return; }
+    let ui_data = {};
     getDataFromAPI(constructGeonamesURL(location))
     .then(function(data){
-        postDataToAPI('http://localhost:3030/geonames', data.geonames[0]);
+        postDataToAPI('http://localhost:3030/geonames', data.geonames[0])
+        .then(function(results) {
+            ui_data = getDataFromAPI('http://localhost:3030/all');
+        });
     })
 }
 
@@ -57,6 +61,9 @@ function handleSubmit() {
     const diff = getDateDiff(targetDate).days;
     locationInput.value = "";
     console.log(diff);
-    return getGeonamesData(locationText);
+    getGeonamesData(locationText);
+    const apiData = getDataFromAPI('http://localhost:3030/all');
+    // getWeatherbitData();
+    console.log(apiData);
 }
 export { handleSubmit }

@@ -1,10 +1,20 @@
 // Setup empty JS object to act as endpoint for all routes
 projectData = {};
 
-// Require Express to run server and routes
+// Use fetch in node
+const fetch = require('node-fetch');
+
+if (!globalThis.fetch) {
+    globalThis.fetch = fetch;
+}
+// Setup dotenv
+const dotenv = require('dotenv');
+dotenv.config();
+
+// Setup express
 const express = require('express');
-// Start up an instance of app
 const app = express();
+
 /* Middleware*/
 const bodyParser = require('body-parser');
 //Here we are configuring express to use body-parser as middle-ware.
@@ -27,14 +37,43 @@ function listening() {
   console.log(`Server running on port ${port}`);
 }
 
+const constructWeatherAPILink = (lat, lng) => {
+  const key = '&key=' + process.env.WEATHER_KEY;
+  const url = 'http://api.weatherbit.io/v2.0/current?units=I'
+  const lat_long = `&lat=${lat}&lon=${lng}`
+  return url + lat_long + key;
+}
+
+async function getDataFromAPI(url='') {
+  const request = await fetch(url);
+  try {
+      const data = request.json();
+      return data
+  }
+  catch(error) {
+      console.log("error", error);
+  }
+}
+
 app.get('/', (req, res) => {
   res.sendFile('dist/index.html');
 });
 
-app.get('/all', (req, res) => {
-  res.send(projectData);
+app.get('/all', async (req, res) => {
+  lat = projectData.geonames.lat;
+  long = projectData.geonames.lng;
+  const weatherData = await getDataFromAPI(constructWeatherAPILink(lat, long));
+  try {
+    projectData.weatherData = weatherData;
+    res.send(projectData);
+  }
+  catch (error) {
+    console.log(error);
+  }
 });
 
 app.post('/geonames', (req, res) => {
-  projectData.geonames = req.body;
+  const data = req.body;
+  const relevantData = {name: data.toponymName, lat: data.lat, lng: data.lng, state_region: data.adminName1, country: data.countryCode};
+  projectData.geonames = relevantData;
 });
