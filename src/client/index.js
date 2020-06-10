@@ -1,3 +1,3 @@
-import { getGeonamesData } from "./js/app";
+import { handleSubmit } from "./js/app";
 
-export { getGeonamesData }
+export { handleSubmit }

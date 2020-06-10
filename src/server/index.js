@@ -35,9 +35,6 @@ app.get('/all', (req, res) => {
   res.send(projectData);
 });
 
-app.get('')
-
 app.post('/geonames', (req, res) => {
   projectData.geonames = req.body;
-  console.log(projectData);
 });
