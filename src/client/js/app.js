@@ -29,7 +29,7 @@ function constructGeonamesURL(rawSearchTerm) {
     return fetchURL;
 }
 
-const getDate = (target) => {
+const getDateDiff = (target) => {
     const currentDate = new Date();
     const targetDate = new Date(target);
     return intervalToDuration({
@@ -54,7 +54,7 @@ function handleSubmit() {
     const locationText = locationInput.value;
     const targetDateValue = document.getElementById('targetDate').value;
     const targetDate = new Date(targetDateValue);
-    const diff = getDate(targetDate).days;
+    const diff = getDateDiff(targetDate).days;
     locationInput.value = "";
     console.log(diff);
     return getGeonamesData(locationText);
