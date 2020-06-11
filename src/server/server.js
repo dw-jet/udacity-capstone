@@ -2,6 +2,7 @@ import { getDataFromAPI } from '../client/js/getDataFromAPI'
 
 // Setup empty JS object to act as endpoint for all routes
 let projectData = {};
+const regeneratorRuntime = require('regenerator-runtime')
 
 // Use fetch in node
 const fetch = require('node-fetch');
@@ -59,7 +60,6 @@ app.get('/all', async (req, res) => {
 });
 
 app.post('/geonames', (req, res) => {
-  console.log("Starting Post")
   const data = req.body;
   projectData.geonames = {
     name: data.toponymName, 
