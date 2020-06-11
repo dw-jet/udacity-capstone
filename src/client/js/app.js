@@ -1,28 +1,8 @@
 import { intervalToDuration } from 'date-fns'
+import { getDataFromAPI } from './getDataFromAPI'
+import { postDataToAPI } from './postDataToAPI'
 
 // Helper functions
-async function getDataFromAPI(url='') {
-    const request = await fetch(url);
-    try {
-        const data = request.json();
-        return data
-    }
-    catch(error) {
-        console.log("error", error);
-    }
-}
-
-async function postDataToAPI(url='', data = {}) {
-    const response = await fetch(url, {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    }) 
-}
-
 function constructGeonamesURL(rawSearchTerm) {
     const encodedSearchTerm = encodeURI(rawSearchTerm)
     const fetchURL = `http://api.geonames.org/searchJSON?q=${encodedSearchTerm}&maxRows=10&featureCode=PPL&featureCode=PPLA&featureCode=PPLA2&username=dw_jet`;
@@ -39,31 +19,38 @@ const getDateDiff = (target) => {
 }
 
 // Individual API calls
-const getGeonamesData = (location) => {
+const getGeonamesData = async (location) => {
     if (!location) { return; }
     let ui_data = {};
-    getDataFromAPI(constructGeonamesURL(location))
-    .then(function(data){
-        postDataToAPI('http://localhost:3030/geonames', data.geonames[0])
-        .then(function(results) {
-            ui_data = getDataFromAPI('http://localhost:3030/all');
-        });
-    })
+    const gnData = await getDataFromAPI(constructGeonamesURL(location));
+    postDataToAPI('http://localhost:3030/geonames', gnData.geonames[0]);
+    const allData = await getDataFromAPI('http://localhost:3030/all');
+    return allData;
+}
+
+const buildResults = (data) => {
+    const pixabayData = data.pixabay.hits[0];
+    const geonamesData = data.geonames[0];
+    const weatherData = data.weatherData;
+    const rootNode = document.getElementById('results');
+    const imgTag = document.createElement("img");
+    imgTag.src = pixabayData.webformatURL;
+    rootNode.appendChild(imgTag);
 }
 
 // Main function
 
-function handleSubmit() {
+async function handleSubmit() {
     const locationInput = document.getElementById('location');
     const locationText = locationInput.value;
-    const targetDateValue = document.getElementById('targetDate').value;
+    const dateNode = document.getElementById('targetDate');
+    const targetDateValue = dateNode.value;
     const targetDate = new Date(targetDateValue);
     const diff = getDateDiff(targetDate).days;
     locationInput.value = "";
-    console.log(diff);
-    getGeonamesData(locationText);
-    const apiData = getDataFromAPI('http://localhost:3030/all');
-    // getWeatherbitData();
-    console.log(apiData);
+    dateNode.value = "";
+    
+    const ui_data = await getGeonamesData(locationText);
+    buildResults(ui_data);
 }
 export { handleSubmit }

@@ -1,5 +1,7 @@
+import { getDataFromAPI } from '../client/js/getDataFromAPI'
+
 // Setup empty JS object to act as endpoint for all routes
-projectData = {};
+let projectData = {};
 
 // Use fetch in node
 const fetch = require('node-fetch');
@@ -44,15 +46,11 @@ const constructWeatherAPILink = (lat, lng) => {
   return url + lat_long + key;
 }
 
-async function getDataFromAPI(url='') {
-  const request = await fetch(url);
-  try {
-      const data = request.json();
-      return data
-  }
-  catch(error) {
-      console.log("error", error);
-  }
+const constructPixabayAPILink = (term) => {
+  const key = "?key=" + process.env.PIXABAY_KEY;
+  const url = "https://pixabay.com/api/";
+  const query = "&image_type=photo&q=" + term;
+  return url + key + query;
 }
 
 app.get('/', (req, res) => {
@@ -60,20 +58,21 @@ app.get('/', (req, res) => {
 });
 
 app.get('/all', async (req, res) => {
-  lat = projectData.geonames.lat;
-  long = projectData.geonames.lng;
-  const weatherData = await getDataFromAPI(constructWeatherAPILink(lat, long));
-  try {
-    projectData.weatherData = weatherData;
-    res.send(projectData);
-  }
-  catch (error) {
-    console.log(error);
-  }
+  const lat = projectData.geonames.lat;
+  const long = projectData.geonames.lng;
+  const name = encodeURI(`${projectData.geonames.name} ${projectData.geonames.state_region} landscape`);
+  projectData.weatherData = await getDataFromAPI(constructWeatherAPILink(lat, long));
+  projectData.pixabay = await getDataFromAPI(constructPixabayAPILink(name));
+  res.send(projectData);
 });
 
 app.post('/geonames', (req, res) => {
   const data = req.body;
-  const relevantData = {name: data.toponymName, lat: data.lat, lng: data.lng, state_region: data.adminName1, country: data.countryCode};
-  projectData.geonames = relevantData;
+  projectData.geonames = {
+    name: data.toponymName, 
+    lat: data.lat, 
+    lng: data.lng, 
+    state_region: data.adminName1, 
+    country: data.countryCode
+  };
 });
