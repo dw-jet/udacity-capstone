@@ -67,6 +67,7 @@ app.get('/all', async (req, res) => {
 });
 
 app.post('/geonames', (req, res) => {
+  console.log("Starting Post")
   const data = req.body;
   projectData.geonames = {
     name: data.toponymName, 
