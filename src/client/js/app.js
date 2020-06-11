@@ -1,4 +1,3 @@
-import { intervalToDuration } from 'date-fns'
 import { getDataFromAPI } from './getDataFromAPI'
 import { postDataToAPI } from './postDataToAPI'
 import { noInputError } from './noInputError'
@@ -13,10 +12,8 @@ function constructGeonamesURL(rawSearchTerm) {
 const getDateDiff = (target) => {
     const currentDate = new Date();
     const targetDate = new Date(target);
-    return intervalToDuration({
-        start: currentDate,
-        end: targetDate
-    })
+    const msPerDay = 1000*60*60*24;
+    return Math.round((targetDate-currentDate)/msPerDay)
 }
 
 // Get a location from geonames
@@ -58,18 +55,17 @@ async function handleSubmit() {
 
     if (locationInput.value == "" || dateNode.value == "") {
         noInputError();
-        console.log("Ran no input code");
     }
 
     const locationText = locationInput.value;
     const targetDateValue = dateNode.value;
     
     const targetDate = new Date(targetDateValue);
-    const diff = getDateDiff(targetDate).days;
+    const diff = getDateDiff(targetDate);
     locationInput.value = "";
     dateNode.value = "";
     
-    const ui_data = await getGeonamesData(locationText);
-    buildResults(ui_data);
+    // const ui_data = await getGeonamesData(locationText);
+    // buildResults(ui_data);
 }
 export { handleSubmit }
