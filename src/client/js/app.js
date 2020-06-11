@@ -1,6 +1,7 @@
 import { intervalToDuration } from 'date-fns'
 import { getDataFromAPI } from './getDataFromAPI'
 import { postDataToAPI } from './postDataToAPI'
+import { noInputError } from './noInputError'
 
 // Helper functions
 function constructGeonamesURL(rawSearchTerm) {
@@ -18,7 +19,7 @@ const getDateDiff = (target) => {
     })
 }
 
-// Individual API calls
+// Get a location from geonames
 const getGeonamesData = async (location) => {
     if (!location) { return; }
     let ui_data = {};
@@ -28,6 +29,7 @@ const getGeonamesData = async (location) => {
     return allData;
 }
 
+// Build the HTML for the result and attach to the DOM
 const buildResults = (data) => {
     const pixabayData = data.pixabay.hits[0];
     const geonamesData = data.geonames;
@@ -48,10 +50,20 @@ const buildResults = (data) => {
 // Main function
 
 async function handleSubmit() {
+    const errorLast = document.getElementById('errorMessage');
+    if (errorLast) { errorLast.remove(); }
+    
     const locationInput = document.getElementById('location');
-    const locationText = locationInput.value;
     const dateNode = document.getElementById('targetDate');
+
+    if (locationInput.value == "" || dateNode.value == "") {
+        noInputError();
+        console.log("Ran no input code");
+    }
+
+    const locationText = locationInput.value;
     const targetDateValue = dateNode.value;
+    
     const targetDate = new Date(targetDateValue);
     const diff = getDateDiff(targetDate).days;
     locationInput.value = "";
