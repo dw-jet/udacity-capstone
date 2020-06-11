@@ -1,5 +1,7 @@
+import { getDataFromAPI } from '../client/js/getDataFromAPI'
+
 // Setup empty JS object to act as endpoint for all routes
-projectData = {};
+let projectData = {};
 
 // Use fetch in node
 const fetch = require('node-fetch');
@@ -44,26 +46,17 @@ const constructWeatherAPILink = (lat, lng) => {
   return url + lat_long + key;
 }
 
-async function getDataFromAPI(url='') {
-  const request = await fetch(url);
-  try {
-      const data = request.json();
-      return data
-  }
-  catch(error) {
-      console.log("error", error);
-  }
-}
-
 app.get('/', (req, res) => {
   res.sendFile('dist/index.html');
 });
 
 app.get('/all', async (req, res) => {
+  console.log("Getting /all");
   lat = projectData.geonames.lat;
   long = projectData.geonames.lng;
   const weatherData = await getDataFromAPI(constructWeatherAPILink(lat, long));
   try {
+    console.log("Got all")
     projectData.weatherData = weatherData;
     res.send(projectData);
   }
@@ -73,7 +66,8 @@ app.get('/all', async (req, res) => {
 });
 
 app.post('/geonames', (req, res) => {
+  console.log("Starting Post")
   const data = req.body;
-  const relevantData = {name: data.toponymName, lat: data.lat, lng: data.lng, state_region: data.adminName1, country: data.countryCode};
-  projectData.geonames = relevantData;
+  projectData.geonames = {name: data.toponymName, lat: data.lat, lng: data.lng, state_region: data.adminName1, country: data.countryCode};
+  console.log("Finishing post")
 });

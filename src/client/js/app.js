@@ -1,28 +1,8 @@
 import { intervalToDuration } from 'date-fns'
+import { getDataFromAPI } from './getDataFromAPI'
+import { postDataToAPI } from './postDataToAPI'
 
 // Helper functions
-async function getDataFromAPI(url='') {
-    const request = await fetch(url);
-    try {
-        const data = request.json();
-        return data
-    }
-    catch(error) {
-        console.log("error", error);
-    }
-}
-
-async function postDataToAPI(url='', data = {}) {
-    const response = await fetch(url, {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-    }) 
-}
-
 function constructGeonamesURL(rawSearchTerm) {
     const encodedSearchTerm = encodeURI(rawSearchTerm)
     const fetchURL = `http://api.geonames.org/searchJSON?q=${encodedSearchTerm}&maxRows=10&featureCode=PPL&featureCode=PPLA&featureCode=PPLA2&username=dw_jet`;
@@ -43,11 +23,17 @@ const getGeonamesData = (location) => {
     if (!location) { return; }
     let ui_data = {};
     getDataFromAPI(constructGeonamesURL(location))
-    .then(function(data){
+    .then(async function(data){
         postDataToAPI('http://localhost:3030/geonames', data.geonames[0])
-        .then(function(results) {
-            ui_data = getDataFromAPI('http://localhost:3030/all');
-        });
+    })
+    .then(async function(results){
+        const ui_data = await getDataFromAPI('http://localhost:3030/all');
+        try {
+            return ui_data;
+        }
+        catch (error) {
+            console.log('error', error);
+        }
     })
 }
 
@@ -61,9 +47,7 @@ function handleSubmit() {
     const diff = getDateDiff(targetDate).days;
     locationInput.value = "";
     console.log(diff);
-    getGeonamesData(locationText);
-    const apiData = getDataFromAPI('http://localhost:3030/all');
-    // getWeatherbitData();
-    console.log(apiData);
+    const ui_data = getGeonamesData(locationText);
+    console.log(ui_data);
 }
 export { handleSubmit }
