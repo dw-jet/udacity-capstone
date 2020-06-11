@@ -65,7 +65,7 @@ async function handleSubmit() {
     locationInput.value = "";
     dateNode.value = "";
     
-    // const ui_data = await getGeonamesData(locationText);
-    // buildResults(ui_data);
+    const ui_data = await getGeonamesData(locationText);
+    buildResults(ui_data);
 }
 export { handleSubmit }
