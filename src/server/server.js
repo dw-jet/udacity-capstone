@@ -31,14 +31,6 @@ app.use(cors());
 app.use(express.static('dist'));
 
 
-// Setup Server
-const port = 3030;
-const server = app.listen(port, listening);
-
-function listening() {
-  console.log(`Server running on port ${port}`);
-}
-
 const constructWeatherAPILink = (lat, lng) => {
   const key = '&key=' + process.env.WEATHER_KEY;
   const url = 'http://api.weatherbit.io/v2.0/current?units=I'
@@ -77,3 +69,5 @@ app.post('/geonames', (req, res) => {
     country: data.countryCode
   };
 });
+
+module.exports = app
