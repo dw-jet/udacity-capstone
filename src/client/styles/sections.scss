@@ -28,6 +28,11 @@ $accent-color: rgb(250, 181, 38);
         input {
             width: 100%;
             font: 16px/1.5em "Karla", sans-serif;
+            border: 1px solid $accent-grey;
+            height: 2.5em;
+        }
+        input:hover {
+            border: 1px solid $text-color;
         }
     }    
 }
