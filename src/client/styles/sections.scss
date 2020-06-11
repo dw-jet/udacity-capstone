@@ -31,3 +31,24 @@ $accent-color: rgb(250, 181, 38);
         }
     }    
 }
+
+.results {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    .head {
+        font-weight: bold;
+    }
+    .result-container {
+        padding: 10px;
+        display: flex;
+        flex-direction: row;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        width: 50%;
+        img {
+            max-width: 150px;
+        }
+    }
+}

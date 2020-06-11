@@ -30,12 +30,19 @@ const getGeonamesData = async (location) => {
 
 const buildResults = (data) => {
     const pixabayData = data.pixabay.hits[0];
-    const geonamesData = data.geonames[0];
-    const weatherData = data.weatherData;
+    const geonamesData = data.geonames;
+    const weatherData = data.weatherData.data[0];
+    console.log(weatherData);
     const rootNode = document.getElementById('results');
     const imgTag = document.createElement("img");
-    imgTag.src = pixabayData.webformatURL;
-    rootNode.appendChild(imgTag);
+    const status = document.createElement("p");
+    const contain = document.createElement("div");
+    contain.classList.add("result-container");
+    contain.appendChild(imgTag);
+    contain.appendChild(status);
+    imgTag.src = pixabayData.previewURL;
+    status.innerHTML = `<span class="head">${geonamesData.name}, ${geonamesData.state_region}</span><br>${weatherData.app_temp} - ${weatherData.weather.description}`
+    rootNode.appendChild(contain);
 }
 
 // Main function
