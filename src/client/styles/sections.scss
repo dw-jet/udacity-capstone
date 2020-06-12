@@ -16,25 +16,29 @@ $accent-color: rgb(250, 181, 38);
     display: flex;
     background-color: $accent-grey;
     justify-content: center;
+
     form {
         margin: 50px 20px 50px;
         width: 50%;
         display: flex;
         flex-direction: column;
         align-items: center;
+
         label {
             margin-bottom: .5em;
         }
+
         input {
             width: 100%;
             font: 16px/1.5em "Karla", sans-serif;
             border: 1px solid $accent-grey;
             height: 2.5em;
         }
+
         input:hover {
             border: 1px solid $text-color;
         }
-    }    
+    }
 }
 
 .results {
@@ -42,9 +46,11 @@ $accent-color: rgb(250, 181, 38);
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: flex-start;
+
     .head {
         font-weight: bold;
     }
+
     .result-container {
         padding: 10px;
         display: flex;
@@ -52,6 +58,7 @@ $accent-color: rgb(250, 181, 38);
         justify-content: flex-start;
         flex-wrap: wrap;
         width: 50%;
+
         img {
             max-width: 150px;
         }
