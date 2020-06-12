@@ -6,6 +6,7 @@
     <title>Front End Capstone</title>
     <meta name="description" content="Udacity Front End Nanodegree Capstone" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Karla&display=swap" rel="stylesheet">
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('go').addEventListener('click', function(event) {
@@ -30,6 +31,14 @@
             
         </section>
     </div>
+    <script>
+        // Check that service workers are supported
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/service-worker.js');
+            });
+        }
+    </script>
 </body>
 
 </html>

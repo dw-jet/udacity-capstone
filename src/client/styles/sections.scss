@@ -52,15 +52,22 @@ $accent-color: rgb(250, 181, 38);
     }
 
     .result-container {
-        padding: 10px;
-        display: flex;
-        flex-direction: row;
-        justify-content: flex-start;
-        flex-wrap: wrap;
-        width: 50%;
-
+        width: 100%;
+        display: grid;
+        margin: auto;
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+        grid-template-areas: "head" "body";
         img {
-            max-width: 150px;
+            grid-area: body;
+            width: 100%;
+        }
+        p {
+            grid-area: head;
+        }
+        .text-wrapper {
+            padding: 5px;
+            width: 100%;
         }
     }
 }

@@ -13,7 +13,7 @@ const getDateDiff = (target) => {
     const currentDate = new Date();
     const targetDate = new Date(target);
     const msPerDay = 1000*60*60*24;
-    return Math.round((targetDate-currentDate)/msPerDay)
+    return Math.round((targetDate-currentDate)/msPerDay) + 1;
 }
 
 // Get a location from geonames
@@ -27,20 +27,28 @@ const getGeonamesData = async (location) => {
 }
 
 // Build the HTML for the result and attach to the DOM
-const buildResults = (data) => {
+const buildResults = (data, countdown) => {
+    const resultDiv = document.querySelector('.result-container');
+    if (resultDiv) { resultDiv.remove(); }
     const pixabayData = data.pixabay;
     const geonamesData = data.geonames;
-    const weatherData = data.weather[0];
-    console.log(weatherData);
+    const weatherData = countdown > 7 ? data.weather[7] : data.weather[0];
     const rootNode = document.getElementById('results');
-    const imgTag = document.createElement("img");
-    const status = document.createElement("p");
-    const contain = document.createElement("div");
-    contain.classList.add("result-container");
+    const imgTag = document.createElement('img');
+    const head = document.createElement("h1");
+    const status = document.createElement('p');
+    const contain = document.createElement('div');
+    const textWrapper = document.createElement('div');
+    textWrapper.classList.add('text-wrapper');
+    const statusMessage = countdown > 7 ? 'Next week' : 'Right now';
+    contain.classList.add('result-container');
     contain.appendChild(imgTag);
-    contain.appendChild(status);
-    imgTag.src = pixabayData.previewURL;
-    status.innerHTML = `<span class="head">${geonamesData.name}, ${geonamesData.state_region}</span><br>${weatherData.temp} - ${weatherData.weather.description}`
+    textWrapper.appendChild(head);
+    textWrapper.appendChild(status);
+    contain.appendChild(textWrapper);
+    imgTag.src = pixabayData.webformatURL;
+    head.textContent = `${geonamesData.name}, ${geonamesData.state_region} in ${countdown} days`;
+    status.textContent = `${statusMessage} in ${geonamesData.name} - ${weatherData.weather.description} and ${weatherData.temp}`
     rootNode.appendChild(contain);
 }
 
@@ -67,6 +75,6 @@ async function handleSubmit() {
     
     let ui_data = await getGeonamesData(locationText);
     ui_data.countdown = diff;
-    buildResults(ui_data);
+    buildResults(ui_data, diff);
 }
 export { handleSubmit }
