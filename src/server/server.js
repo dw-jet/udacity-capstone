@@ -1,8 +1,11 @@
 import { getDataFromAPI } from '../client/js/getDataFromAPI'
+import { constructWeatherAPILink } from './constructWeatherAPILink'
+import { fetchPixabayData } from './fetchPixabayData'
+
+const regeneratorRuntime = require('regenerator-runtime')
 
 // Setup empty JS object to act as endpoint for all routes
 let projectData = {};
-const regeneratorRuntime = require('regenerator-runtime')
 
 // Use fetch in node
 const fetch = require('node-fetch');
@@ -31,21 +34,6 @@ app.use(cors());
 // Initialize the main project folder
 app.use(express.static('dist'));
 
-
-const constructWeatherAPILink = (lat, lng) => {
-  const key = '&key=' + process.env.WEATHER_KEY;
-  const url = 'http://api.weatherbit.io/v2.0/current?units=I'
-  const lat_long = `&lat=${lat}&lon=${lng}`
-  return url + lat_long + key;
-}
-
-const constructPixabayAPILink = (term) => {
-  const key = "?key=" + process.env.PIXABAY_KEY;
-  const url = "https://pixabay.com/api/";
-  const query = "&image_type=photo&q=" + term;
-  return url + key + query;
-}
-
 app.get('/', (req, res) => {
   res.sendFile('dist/index.html');
 });
@@ -54,13 +42,17 @@ app.get('/all', async (req, res) => {
   const lat = projectData.geonames.lat;
   const long = projectData.geonames.lng;
   const name = encodeURI(`${projectData.geonames.name} ${projectData.geonames.state_region} landscape`);
-  projectData.weatherData = await getDataFromAPI(constructWeatherAPILink(lat, long));
-  projectData.pixabay = await getDataFromAPI(constructPixabayAPILink(name));
+  const type = projectData.countdown < 8 ? "current" : "forecast";
+  wbData = await getDataFromAPI(constructWeatherAPILink(lat, long, type));
+  projectData.weather = wbData.data;
+  
+  projectData.pixabay = await fetchPixabayData(name, projectData.geonames.country);
   res.send(projectData);
 });
 
 app.post('/geonames', (req, res) => {
   const data = req.body;
+  projectData.countdown = data.countdown;
   projectData.geonames = {
     name: data.toponymName, 
     lat: data.lat, 
