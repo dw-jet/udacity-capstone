@@ -43,7 +43,7 @@ app.get('/all', async (req, res) => {
   const long = projectData.geonames.lng;
   const name = encodeURI(`${projectData.geonames.name} ${projectData.geonames.state_region} landscape`);
   const type = projectData.countdown < 8 ? "current" : "forecast";
-  wbData = await getDataFromAPI(constructWeatherAPILink(lat, long, type));
+  const wbData = await getDataFromAPI(constructWeatherAPILink(lat, long, type));
   projectData.weather = wbData.data;
   
   projectData.pixabay = await fetchPixabayData(name, projectData.geonames.country);

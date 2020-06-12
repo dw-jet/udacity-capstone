@@ -15,6 +15,7 @@ const constructPixabayAPILink = (term) => {
     else {
       const countryName = encodeURI(`${country} landscape`);
       pixData = await getDataFromAPI(constructPixabayAPILink())
+      return pixData.hits[0]
     }
   }
 

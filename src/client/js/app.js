@@ -30,7 +30,7 @@ const getGeonamesData = async (location) => {
 const buildResults = (data) => {
     const pixabayData = data.pixabay;
     const geonamesData = data.geonames;
-    const weatherData = data.weather;
+    const weatherData = data.weather[0];
     console.log(weatherData);
     const rootNode = document.getElementById('results');
     const imgTag = document.createElement("img");
@@ -40,7 +40,7 @@ const buildResults = (data) => {
     contain.appendChild(imgTag);
     contain.appendChild(status);
     imgTag.src = pixabayData.previewURL;
-    status.innerHTML = `<span class="head">${geonamesData.name}, ${geonamesData.state_region}</span><br>${weatherData.app_temp} - ${weatherData.weather.description}`
+    status.innerHTML = `<span class="head">${geonamesData.name}, ${geonamesData.state_region}</span><br>${weatherData.temp} - ${weatherData.weather.description}`
     rootNode.appendChild(contain);
 }
 
