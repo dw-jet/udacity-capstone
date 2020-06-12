@@ -28,9 +28,9 @@ const getGeonamesData = async (location) => {
 
 // Build the HTML for the result and attach to the DOM
 const buildResults = (data) => {
-    const pixabayData = data.pixabay.hits[0];
+    const pixabayData = data.pixabay;
     const geonamesData = data.geonames;
-    const weatherData = data.weatherData.data[0];
+    const weatherData = data.weather[0];
     console.log(weatherData);
     const rootNode = document.getElementById('results');
     const imgTag = document.createElement("img");
@@ -40,7 +40,7 @@ const buildResults = (data) => {
     contain.appendChild(imgTag);
     contain.appendChild(status);
     imgTag.src = pixabayData.previewURL;
-    status.innerHTML = `<span class="head">${geonamesData.name}, ${geonamesData.state_region}</span><br>${weatherData.app_temp} - ${weatherData.weather.description}`
+    status.innerHTML = `<span class="head">${geonamesData.name}, ${geonamesData.state_region}</span><br>${weatherData.temp} - ${weatherData.weather.description}`
     rootNode.appendChild(contain);
 }
 
@@ -65,7 +65,8 @@ async function handleSubmit() {
     locationInput.value = "";
     dateNode.value = "";
     
-    const ui_data = await getGeonamesData(locationText);
+    let ui_data = await getGeonamesData(locationText);
+    ui_data.countdown = diff;
     buildResults(ui_data);
 }
 export { handleSubmit }
