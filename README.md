@@ -11,7 +11,7 @@ npm Install
 ```
 3. Build the project
 ```bash
-npm run build-prod
+npm run build
 ```
 4. Start the server
 ```bash
